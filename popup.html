@@ -1,0 +1,39 @@
+<style>
+body {
+  min-width:457px;
+  overflow-x:hidden;
+}
+
+img {
+  margin:5px;
+  border:1px solid #2395DA;
+  vertical-align:middle;
+  width:50px;
+  height:50px;
+}
+</style>
+
+<script>
+var req = new XMLHttpRequest();
+req.open(
+    "GET",
+    "http://iliveinomaha.com/iliochrome/index.php",
+    true);
+req.onload = showPhotos;
+req.send(null);
+
+function showPhotos() {
+  var photos = req.responseXML.getElementsByTagName("photo");
+
+  for (var i = 0, photo; photo = photos[i]; i++) {
+    var img = document.createElement("image");
+	var link = document.createElement('a');
+	link.href = photo.getAttribute('link');
+	link.target = "_blank";
+    img.src = photo.getAttribute("src");
+	img.title = photo.getAttribute("reason");
+    link.appendChild(img);
+	document.body.appendChild(link);
+  }
+}
+</script>
