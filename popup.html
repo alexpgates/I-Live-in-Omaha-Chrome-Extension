@@ -1,39 +1,60 @@
 <style>
-body {
-  min-width:457px;
-  overflow-x:hidden;
-}
+	body {
+		min-width: 457px;
+		overflow-x: hidden;
+		font-family: Helvetica, Verdana, sans-serif;
+	}
 
-img {
-  margin:5px;
-  border:1px solid #2395DA;
-  vertical-align:middle;
-  width:50px;
-  height:50px;
-}
+	#photos img {
+		margin: 5px;
+		border: 1px solid #2395DA;
+		vertical-align: middle;
+		width: 50px;
+		height: 50px;
+	}
+
+	#loading {
+		text-align: center;
+	}
 </style>
 
-<script>
-var req = new XMLHttpRequest();
-req.open(
-    "GET",
-    "http://iliveinomaha.com/iliochrome/index.php",
-    true);
-req.onload = showPhotos;
-req.send(null);
+<div id="loading"><img src="ajax-loader.gif" alt="Loading..."/></div>
+<div id="photos"></div>
 
-function showPhotos() {
-  var photos = req.responseXML.getElementsByTagName("photo");
+<script type="text/javascript">
+	var req = null;
 
-  for (var i = 0, photo; photo = photos[i]; i++) {
-    var img = document.createElement("image");
-	var link = document.createElement('a');
-	link.href = photo.getAttribute('link');
-	link.target = "_blank";
-    img.src = photo.getAttribute("src");
-	img.title = photo.getAttribute("reason");
-    link.appendChild(img);
-	document.body.appendChild(link);
-  }
-}
+	function showPhotos() {
+		console.log( req );
+
+		var photos = JSON.parse( req.response );
+
+		for( var i = 0, photo; photo = photos["data"][i]; i++) {
+			var img = document.createElement("image");
+			var link = document.createElement('a');
+			link.href = photo["url"];
+			link.target = "_blank";
+			img.src = photo["photo_url"];
+			img.title = photo["reason"];
+			link.appendChild(img);
+			document.getElementById("photos").appendChild(link);
+		}
+
+		document.getElementById("loading").style.display = "none";
+		document.getElementById("photos").style.display = "block";
+	}
+
+	function loadPhotos () {
+		req = new XMLHttpRequest();
+		req.open(
+			"GET",
+			"http://iliveinomaha.com/api/approved/random/photos?limit=56",
+			true
+		);
+		req.onload = showPhotos;
+		req.send(null);
+	}
+
+	// Trick to make loading gif show first :-)
+	setTimeout( loadPhotos, 100 );
 </script>

@@ -9,7 +9,7 @@
 	"default_icon": "icon.png",
 	"popup": "popup.html"
 	},
-	  "permissions": [
-	    "http://iliveinomaha.com/"
-	  ]
+	"permissions": [
+		"http://iliveinomaha.com/"
+	]
 }
